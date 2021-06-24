@@ -25,6 +25,8 @@ const cardWidth = width /1.8
 const HomeCard = ({ navigation, lesson }) => {
   const [img, setImg] = useState();
   const [rate, setRate] = useState(0);
+  const [allCount, setAllCount] = useState(0);
+
 
   const getLessonImage = () => {
     var cardSubject = lesson.subject;
@@ -38,37 +40,38 @@ const HomeCard = ({ navigation, lesson }) => {
 
   }
 
-  const getRating = () => {
+  useEffect(() => {
+    setImg()
+    getLessonImage()
+    getRatings()
+  }, [])
+
+  const getRatings = () => {
     try {
       axios.get(constants.backend_url + "/rating/get-rate/" + lesson._id)
         .then(res => {
-          if (res.data.rate!=0){
-            var allRate = res.data.rate;
-            var count = res.data.count;
-            var actualRate = allRate / count;
-            setRate(actualRate);
+          var total = res.data.total;
+          var count = res.data.count;
+          if (total != 0 && count != 0) {
+            setRate(total / count);
+            setAllCount(count);
           }
-          
         })
 
     } catch (err) {
-      console.log(err)
+      console.log(err.response.data.msg)
     }
   }
 
-  useEffect(() => {
-    setRate(0);
-    setImg()
-    getLessonImage()
-    getRating()
-  }, [])
+
+
 
 
   return (
     <TouchableHighlight
       underlayColor={COLORS.white}
       activeOpacity={0.9}
-      onPress={() => navigation.navigate("DetailsScreen", lessons)}
+      onPress={() => navigation.navigate("DetailsScreen", { lesson: lesson })}
     >
       <View style={style.card}>
         <View style={{ alignItems: "center", top: -60, marginTop: 15 }}>
@@ -76,7 +79,7 @@ const HomeCard = ({ navigation, lesson }) => {
         </View>
         <View style={{ marginHorizontal: 15, top: -20 }}>
           <Text
-            numberOfLines={2}
+            numberOfLines={1}
             style={{
               fontSize: 15,
               fontWeight: "bold",
@@ -97,12 +100,22 @@ const HomeCard = ({ navigation, lesson }) => {
               </Text>
             </View>
           </View>
-          <Rating
+          {/* <Rating
             style={{ marginTop: 3 ,marginLeft:-70}}
             imageSize={20}
             startingValue={3}
             readonly={true}
-          />
+          /> */}
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginLeft: 0 }}>
+            <Text style={style.rate}>({rate})</Text>
+            <Rating
+              style={{ marginTop: 8, paddingHorizontal: 8 }}
+              imageSize={20}
+              startingValue={rate}
+              readonly={true}
+            />
+            <Text style={style.rate} >({allCount})</Text>
+          </View>
           <Text
             style={{
               fontSize: 14,
@@ -123,7 +136,7 @@ const HomeCard = ({ navigation, lesson }) => {
             marginHorizontal: 16,
           }}
         >
-          <Text style={{ fontSize: 15, fontWeight: "bold", marginTop: -10 }}>
+          <Text style={{ fontSize: 15, fontWeight: "bold", marginTop: 0 }}>
             {lesson.price} LKR
           </Text>
 
@@ -156,6 +169,13 @@ const style = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 15,
     justifyContent: 'flex-end'
+  },
+  rate: {
+    marginTop: 10,
+    fontSize: 12,
+    color: COLORS.grey,
+    fontWeight: "bold",
+    marginLeft: 0
   }
 });
 

@@ -1,27 +1,70 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, View, Text, Image} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import React, { useState, useEffect } from "react";
+import { SafeAreaView, StyleSheet, View, Text, Image } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../../consts/colors';
-import {SecondaryButton} from '../components/Button';
+import { SecondaryButton } from '../components/Button';
+import axios from "axios";
+import constants from "../../consts/constants";
+import { Rating } from "react-native-elements";
 
-const DetailsScreen = ({navigation, route}) => {
-  const item = route.params;
+
+const DetailsScreen = ({ navigation, route }) => {
+  //const item = route.params;
+
+  const { lesson } = route.params;
+  const [rate, setRate] = useState(0);
+  const [allCount, setAllCount] = useState(0);
+
+  useEffect(() => {
+    getRatings();
+  }, [])
+
+  const getRatings = () => {
+    try {
+      axios.get(constants.backend_url + "/rating/get-rate/" + lesson._id)
+        .then(res => {
+          var total = res.data.total;
+          var count = res.data.count;
+          if (total != 0 && count != 0) {
+            setRate(total / count);
+            setAllCount(count);
+          }
+        })
+
+    } catch (err) {
+      console.log(err.response.data.msg)
+    }
+  }
 
   return (
-    <SafeAreaView style={{backgroundColor: COLORS.white}}>
+    <SafeAreaView style={{ backgroundColor: COLORS.white }}>
       <View style={style.header}>
         <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
-        <Text style={{fontSize: 20, fontWeight: 'bold'}}>Details</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Details</Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{ height: 0 }}>
+          {/* <Image
+            style={{
+              width: "100%",
+              resizeMode: "contain",
+              top: -200,
+            }}
+            source={require("../../assets/logo5.png")}
+          /> */}
+        </View>
         <View
           style={{
             justifyContent: 'center',
             alignItems: 'center',
             height: 280,
           }}>
-          <Image source={item.image} style={{height: 220, width: 220}} />
+          <Image source={{
+            uri: constants.backend_url + `/lesson/lesson-photo/${lesson._id}`,
+          }}
+            style={{ height: 220, width: 220 }}
+          />
         </View>
         <View style={style.details}>
           <View
@@ -31,22 +74,44 @@ const DetailsScreen = ({navigation, route}) => {
               alignItems: 'center',
             }}>
             <Text
-              style={{fontSize: 25, fontWeight: 'bold', color: COLORS.white}}>
-              {item.name}
+              style={{ fontSize: 25, fontWeight: 'bold', color: COLORS.white }}>
+              {lesson.lesson}
             </Text>
-            <View style={style.iconContainer}>
+            {/* <View style={style.iconContainer}>
               <Icon name="favorite-border" color={COLORS.primary} size={25} />
+            </View> */}
+          </View>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 15 }}>
+            <Text style={style.grade}>
+              {lesson.grade}
+            </Text>
+            <Text style={style.commonText}>
+              {lesson.subject}
+            </Text>
+          </View>
+          <View style={{ marginTop: 15 }}>
+            <Text style={style.master}>
+              {lesson.master_id.first_name}{" "}{lesson.master_id.last_name}
+            </Text>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              <Text style={style.rate}>({rate})</Text>
+              <Rating
+                style={{ marginTop: 12, paddingHorizontal:10 }}
+                imageSize={20}
+                startingValue={rate}
+                readonly={true}
+              />
+              <Text style={style.rate} >({allCount})</Text>
             </View>
           </View>
           <Text style={style.detailsText}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries.
+            {lesson.description}
           </Text>
-          <View style={{marginTop: 40, marginBottom: 40}}>
-            <SecondaryButton title="Buy Now" />
+          <Text style={style.price}>
+            {lesson.price}{" "}{"LKR"}
+          </Text>
+          <View style={{ marginTop: 20, marginBottom: 40 }}>
+            <SecondaryButton title={"Buy Now "} />
           </View>
         </View>
       </ScrollView>
@@ -83,6 +148,41 @@ const style = StyleSheet.create({
     fontSize: 16,
     color: COLORS.white,
   },
+  commonText: {
+
+    fontSize: 20,
+    color: COLORS.white,
+    fontWeight: "bold",
+  },
+  grade: {
+    width: "50%",
+    fontSize: 20,
+    color: COLORS.white,
+    fontWeight: "bold",
+    marginLeft: 0
+  },
+  price: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 20,
+    color: COLORS.white,
+    fontWeight: "bold",
+    marginLeft: 0
+  },
+  master: {
+    width: "50%",
+    fontSize: 17,
+    color: COLORS.white,
+    fontWeight: "bold",
+    marginLeft: 0
+  },
+  rate: {
+    marginTop: 10,
+    fontSize: 17,
+    color: COLORS.white,
+    fontWeight: "bold",
+    marginLeft: 0
+  }
 });
 
 export default DetailsScreen;

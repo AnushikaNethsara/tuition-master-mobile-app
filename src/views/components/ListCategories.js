@@ -30,7 +30,10 @@ const ListCategories = (props) => {
         <TouchableOpacity
           key={index}
           activeOpacity={0.8}
-          onPress={() => setSelectedCategoryIndex(index)}
+          onPress={() => {
+            setSelectedCategoryIndex(index);
+            props.handleGrade(category.name);
+          }}
         >
           <View
             style={{
