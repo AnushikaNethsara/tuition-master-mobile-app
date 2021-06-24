@@ -10,7 +10,7 @@ import {
 import HomeCard from "./HomeCard";
 
 
-const SwapCards = ({ navigation, title, lessons }) => {
+const SearchSwapCards = ({ navigation, title, lessons }) => {
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
 
   return (
@@ -46,4 +46,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default SwapCards;
+export default SearchSwapCards;

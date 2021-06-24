@@ -16,6 +16,7 @@ import COLORS from "../../consts/colors";
 import ListCategories from "../components/ListCategories";
 import HomeCard from "../components/HomeCard";
 import Search from "../components/Search";
+import SearchSwapCards from "../components/SearchSwapCards";
 import SwapCards from "../components/SwapCards";
 import lessons from "../../consts/lessons";
 import constants from "../../consts/constants";
@@ -23,8 +24,8 @@ import { Rating } from "react-native-elements";
 
 
 const SearchScreen = ({ navigation }) => {
-  const [selectedLessons, setSelectedLessons] = useState([]);
   const [grade, setGrade] = useState("Grade 13");
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     getAllLessons();
@@ -34,8 +35,24 @@ const SearchScreen = ({ navigation }) => {
     try {
       axios.get(constants.backend_url + "/lesson/by-grade/" + grade)
         .then(res => {
-          setSelectedLessons(res.data)
+          const array = chunkArray(res.data);
+          setData(array)
         })
+
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const getSearchedLessons = (keyword) => {
+    try {
+      if(keyword !=""){
+        axios.get(constants.backend_url + "/lesson/search/" + keyword)
+          .then(res => {
+            const array = chunkArray(res.data)
+            setData(array)
+          })
+      }
 
     } catch (err) {
       console.log(err)
@@ -47,7 +64,8 @@ const SearchScreen = ({ navigation }) => {
     try {
       axios.get(constants.backend_url + "/lesson/by-grade/" + grade)
         .then(res => {
-          setSelectedLessons(res.data)
+          const array = chunkArray(res.data)
+          setData(array)
         })
 
     } catch (err) {
@@ -56,23 +74,43 @@ const SearchScreen = ({ navigation }) => {
 
   }
 
+  const chunkArray = (items) => {
+    const chunks = []
+    items = [].concat(...items)
+
+    while (items.length) {
+      chunks.push(
+        items.splice(0, 3)
+      )
+    }
+
+    return chunks
+  }
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-      <Search />
+      <Search getSearchedLessons={getSearchedLessons} />
       <View style={{ marginTop: 10 }}>
         <ListCategories handleGrade={handleGrade} />
       </View>
       {
-        selectedLessons.length === 0 ?
+        data.length === 0 ?
           (
             <View style={{ flexDirection: "row", padding: 20 }}>
               <Text style={{ fontSize: 28 }}>No Result</Text>
-            </View>) : (<></>)
+            </View>
+          ) : (<></>)
       }
 
       <ScrollView style={{ marginHorizontal: 10 }}>
-        <SwapCards navigation={navigation} title={""} lessons={selectedLessons} />
+        {data &&
+          data.map((item, index) => {
+            return (
+              <SwapCards navigation={navigation} title={""} lessons={item} key={index} />
+            )
+          })
+        }
       </ScrollView>
     </SafeAreaView>
   );

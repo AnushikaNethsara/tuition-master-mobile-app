@@ -138,15 +138,28 @@ const MyLessonsScreen = ({ navigation }) => {
         <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>My Lessons</Text>
       </View>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 80 }}
-        data={mylessons}
-        renderItem={({ item }) => (
-          <LessonCard lesson={item} navigation={navigation} key={item._id} />
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {
+        mylessons.length !=0 ? (<View>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 80 }}
+            data={mylessons}
+            renderItem={({ item }) => (
+              <LessonCard lesson={item} navigation={navigation} key={item._id} />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>):
+      (<View>
+        <Text
+          style={{ fontSize: 20, fontWeight: "bold", color: COLORS.grey, textAlign: "center" }}
+        >No Lessons
+        </Text>
+      </View>)
+      }
+
+
+
     </SafeAreaView>
   );
 };

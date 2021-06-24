@@ -9,7 +9,7 @@ import MyLessonsScreen from "../screens/MyLessonsScreen";
 import MyAccount from "../screens/MyAccountScreen";
 import SearchScreen from "../screens/SearchScreen";
 import AllLessonsScreen from "../screens/AllLessonsScreen";
-import ProfileScreen from "../screens/Example";
+import Example from "../screens/Example";
 
 const Tab = createBottomTabNavigator();
 
@@ -79,7 +79,7 @@ const BottomNavigator = () => {
       />
       <Tab.Screen
         name="MyAccount"
-        component={MyAccount}
+        component={Example}
         options={{
           tabBarIcon: ({ color }) => (
             <Icon name="account-circle" color={color} size={28} />
