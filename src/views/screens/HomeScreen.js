@@ -19,6 +19,7 @@ import NameHeader from "../components/NameHeader";
 import SwapCards from "../components/SwapCards";
 import constants from "../../consts/constants";
 import { AsyncStorage } from 'react-native';
+import HomeCardSkelton from "../components/loading/HomeCardSkelton";
 import axios from "axios"
 const { width } = Dimensions.get("screen");
 const cardWidth = width - 20;
@@ -30,6 +31,7 @@ const HomeScreen = ({ navigation }) => {
   const [userId, setUserId] = useState("");
   const [userName, setUserName] = useState("");
   const [allLessons, setAllLessons] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     retrieveUserData();
@@ -50,52 +52,42 @@ const HomeScreen = ({ navigation }) => {
     }
   }
 
+  useEffect(() => {
+    setLoading(true);
+    const timing = setTimeout(() => {
+      try {
+        axios.get(constants.backend_url + "/lesson/")
+          .then(res => {
+            setAllLessons(res.data)
+          })
+        setLoading(false);
+
+      } catch (err) {
+        console.log(err)
+      }
+
+    }, 1000);
+    return () => clearTimeout(timing);
+  }, []);
+
   const getAllLessons = () => {
-    try {
-      axios.get(constants.backend_url + "/lesson/")
-        .then(res => {
-          setAllLessons(res.data)
-        })
 
-    } catch (err) {
-      console.log(err.response.data.msg)
-    }
+    setLoading(true);
+    const timing = setTimeout(() => {
+      try {
+        axios.get(constants.backend_url + "/lesson/")
+          .then(res => {
+            setAllLessons(res.data)
+          })
+        setLoading(false);
+
+      } catch (err) {
+        console.log(err.response.data.msg)
+      }
+
+    }, 1000);
+    return () => clearTimeout(timing);
   }
-
-  const CardSample = () => {
-    return (
-      <TouchableHighlight
-        underlayColor={COLORS.white}
-        activeOpacity={0.9}
-      >
-        <View style={style.card1}>
-          <View style={{ alignItems: 'center', top: -40 }}>
-            <Image source={{ uri: 'https://reactjs.org/logo-og.png' }}style={{ height: 120, width: 120, borderRadius: 100 }} />
-          </View>
-          <View style={{ marginHorizontal: 20 }}>
-            <Text style={{ fontSize: 15, fontWeight: 'bold' }}> Keom ndk ss</Text>
-            <Text style={{ fontSize: 14, color: COLORS.grey, marginTop: 2 }}>
-              Keom ndk ss
-            </Text>
-          </View>
-          <View
-            style={{
-              marginTop: 10,
-              marginHorizontal: 20,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-              $1500
-            </Text>
-          </View>
-        </View>
-      </TouchableHighlight>
-
-    );
-  };
-
-
 
   const retrieveUserData = async () => {
     try {
@@ -141,9 +133,15 @@ const HomeScreen = ({ navigation }) => {
       </View>
       
       <ScrollView style={{ marginHorizontal: 10 }}>
-        <CardSample />
-        <SwapCards navigation={navigation} title={"Featured"} lessons={allLessons} />
-        <SwapCards navigation={navigation} title={"Students are viewing"} lessons={allLessons} />
+        {loading && <HomeCardSkelton />}
+        {loading && <HomeCardSkelton />}
+        {!loading &&
+          <SwapCards navigation={navigation} title={"Featured"} lessons={allLessons} />
+        }
+        {!loading &&
+          <SwapCards navigation={navigation} title={"Students are viewing"} lessons={allLessons} />
+        }
+        
       </ScrollView>
     </SafeAreaView>
   );
@@ -158,26 +156,7 @@ const style = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: 10,
-  },
-  card1: {
-    height: 220,
-    width: cardWidth,
-    marginHorizontal: 10,
-    marginBottom: 20,
-    marginTop: 50,
-    borderRadius: 15,
-    elevation: 13,
-    backgroundColor: COLORS.white,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
-  },
+  }
 });
 
 export default HomeScreen;

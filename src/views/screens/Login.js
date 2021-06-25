@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, Image, TextInput, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { Text, ScrollView, View, Image, TextInput, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import COLORS from "../../consts/colors";
 import constants from "../../consts/constants";
@@ -29,7 +29,7 @@ const Login = ({ navigation }) => {
     }
   }
 
-  const storeUserData = async (token,id) => {
+  const storeUserData = async (token, id) => {
     try {
       await AsyncStorage.setItem(
         'token',
@@ -65,6 +65,7 @@ const Login = ({ navigation }) => {
       />
       <Text
         style={{
+          marginTop: -10,
           fontSize: 30,
           alignSelf: "center",
         }}
@@ -82,7 +83,6 @@ const Login = ({ navigation }) => {
           }}
         >
           Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-          sint. Velit officia consequat duis enim velit mollit.
         </Text>
         <Text style={{
           marginHorizontal: 55,
@@ -94,39 +94,41 @@ const Login = ({ navigation }) => {
         </Text>
       </View>
 
-      <View style={style.mailView}>
-        <Icon name="mail" color="#00716F" size={24} />
-        <TextInput style={{ paddingHorizontal: 10 }} onChangeText={text => setEmail(text)} />
-      </View>
-      <View style={style.passwordView}>
-        <Icon name="check" color="#00716F" size={24} />
-        <TextInput style={{ paddingHorizontal: 10 }} onChangeText={text => setPassword(text)} />
-      </View>
-
-      <TouchableOpacity onPress={onSubmit}>
-        <View
-          style={style.loginButton}
-        >
-          <Text
-            style={{
-              color: "white",
-            }}
-          >
-            Login
-          </Text>
+      <ScrollView>
+        <View style={style.mailView}>
+          <Icon name="mail" color="#00716F" size={24} />
+          <TextInput placeholder="Email" style={{ paddingHorizontal: 10, height: 45, fontSize: 18 }} onChangeText={text => setEmail(text)} />
         </View>
-      </TouchableOpacity>
+        <View style={style.passwordView}>
+          <Icon name="lock" color="#00716F" size={24} />
+          <TextInput placeholder="Password" style={{ paddingHorizontal: 10, height: 45, fontSize: 18 }} onChangeText={text => setPassword(text)} />
+        </View>
 
-      <Text
-        onPress={() => navigation.navigate("SignUpScreen")}
-        style={{
-          alignSelf: "center",
-          color: "#00716F",
-          paddingVertical: 30,
-        }}
-      >
-        New User
-      </Text>
+        <TouchableOpacity onPress={onSubmit}>
+          <View
+            style={style.loginButton}
+          >
+            <Text
+              style={{
+                color: "white",
+              }}
+            >
+              Login
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <Text
+          onPress={() => navigation.navigate("SignUpScreen")}
+          style={{
+            alignSelf: "center",
+            color: "#00716F",
+            paddingVertical: 30,
+          }}
+        >
+          New User
+        </Text>
+      </ScrollView>
     </View>
   );
 };

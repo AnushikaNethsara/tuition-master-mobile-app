@@ -164,7 +164,7 @@ const MyLessonsScreen = ({ navigation }) => {
         mylessons.length != 0 ? (<></>) :
           (<View>
             <Text
-              style={{ fontSize: 20, fontWeight: "bold", color: COLORS.grey, textAlign: "center" }}
+              style={{ fontSize: 20, fontWeight: "bold", color: COLORS.grey, textAlign: "center",marginTop:-500 }}
             >No Lessons
             </Text>
           </View>)

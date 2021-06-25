@@ -6,8 +6,12 @@ import {
   TextInput,
   StyleSheet,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  Picker,
+  Platform,
+  Button
 } from "react-native";
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from "@expo/vector-icons/AntDesign";
 import COLORS from "../../consts/colors";
 import { PrimaryButton } from '../components/Button';
@@ -19,18 +23,39 @@ const Register = ({ navigation }) => {
   const [lastName, setLastName] = useState("");
   const [nic, setNic] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState("Male");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [conPassword, setConPassword] = useState("");
   const [error, setError] = useState("");
 
+  //**************//
+  const [date, setDate] = useState(new Date(1598051730000));
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === 'ios');
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  //**************//
+
 
   const onSubmit = async () => {
-    console.log("Ko: " + firstName);
     let first_name = firstName;
     let last_name = lastName;
-    let date_of_birth = dateOfBirth;
+    let date_of_birth = date.toISOString().split("T")[0];
     let passwordCheck = conPassword;
     let ban_status = false;
     let newStudent = {
@@ -83,7 +108,6 @@ const Register = ({ navigation }) => {
           }}
         >
           Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-          sint. Velit officia consequat duis enim velit mollit.
         </Text>
         <Text style={{
           marginHorizontal: 55,
@@ -99,69 +123,103 @@ const Register = ({ navigation }) => {
 
       <ScrollView>
         <View style={style.mail}>
+          <Icon name="user" color="#00716F" size={24} />
           <TextInput
             placeholder="First Name"
             placeholderTextColor="#00716F"
-            style={{ paddingHorizontal: 10 }}
+            style={{ paddingHorizontal: 10, height: 45, fontSize:18 }}
             onChangeText={text => setFirstName(text)}
           />
         </View>
         <View style={style.inputView}>
+          <Icon name="user" color="#00716F" size={24} />
           <TextInput
             placeholder="Last Name"
             placeholderTextColor="#00716F"
-            style={{ paddingHorizontal: 10 }}
+            style={{ paddingHorizontal: 10, height:45,fontSize:18 }}
             onChangeText={text => setLastName(text)}
           />
         </View>
         <View style={style.inputView}>
+          <Icon name="mail" color="#00716F" size={24} />
           <TextInput
             placeholder="Email"
             placeholderTextColor="#00716F"
-            style={{ paddingHorizontal: 10 }}
+            style={{ paddingHorizontal: 10, height:45,fontSize:18 }}
             onChangeText={text => setEmail(text)}
           />
         </View>
         <View style={style.inputView}>
+          <Icon name="idcard" color="#00716F" size={24} />
           <TextInput
             placeholder="NIC"
             placeholderTextColor="#00716F"
-            style={{ paddingHorizontal: 10 }}
+            style={{ paddingHorizontal: 10, height:45,fontSize:18 }}
             onChangeText={text => setNic(text)}
           />
         </View>
         <View style={style.inputView}>
-          <TextInput
+          <Icon name="user" color="#00716F" size={24} />
+          <Picker
+            selectedValue={gender}
+            placeholder="Gender"
+            style={{ height: 50, width: "90%", fontSize: 18, color:"#00716F"}}
+            onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
+          >
+            <Picker.Item label="Male" value="Male" />
+            <Picker.Item label="Female" value="Female" />
+          </Picker>
+          {/* <TextInput
             placeholder="Gender"
             placeholderTextColor="#00716F"
-            style={{ paddingHorizontal: 10 }}
+            style={{ paddingHorizontal: 10, height:45,fontSize:18 }}
             onChangeText={text => setGender(text)}
-          />
+          /> */}
         </View>
-        <View style={style.inputView}>
-          <TextInput
-            placeholder="Date of Birth"
-            placeholderTextColor="#00716F"
-            style={{ paddingHorizontal: 10 }}
-            onChangeText={text => setDateOfBirth(text)}
-          />
-        </View>
+        <TouchableOpacity onPress={showDatepicker} activeOpacity={1}>
+          <View style={style.inputView}>
+            <Icon name="calendar" color="#00716F" size={24} />
+            <TextInput
+              editable={false}
+              placeholder="Date of Birth"
+              value={date.toISOString().split("T")[0]}
+              placeholderTextColor="#00716F"
+              style={{ paddingHorizontal: 10, height: 45, fontSize: 18 }}
+              onChangeText={text => setDateOfBirth(text)}
+            />
+            <View>
+              {show && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode={mode}
+                  is24Hour={true}
+                  display="default"
+                  onChange={onChange}
+                />
+              )}
+            </View>
+          </View>
+        </TouchableOpacity>
+        
 
         <View style={style.inputView}>
+          <Icon name="lock" color="#00716F" size={24} />
           <TextInput
             secureTextEntry
             placeholder="Password"
             placeholderTextColor="#00716F"
-            style={{ paddingHorizontal: 10 }}
+            style={{ paddingHorizontal: 10, height:45,fontSize:18 }}
             onChangeText={text => setPassword(text)}
           />
         </View>
         <View style={style.inputView}>
+          <Icon name="lock" color="#00716F" size={24} />
           <TextInput
             secureTextEntry
             placeholder="Confirm Password"
             placeholderTextColor="#00716F"
-            style={{ paddingHorizontal: 10 }}
+            style={{ paddingHorizontal: 10, height:45,fontSize:18 }}
             onChangeText={text => setConPassword(text)}
           />
         </View>

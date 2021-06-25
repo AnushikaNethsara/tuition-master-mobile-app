@@ -49,7 +49,6 @@ export default LessonCardSkelton;
 const style = StyleSheet.create({
     lessonCard: {
         height: card / 2.5,
-        elevation: 15,
         borderRadius: 10,
         backgroundColor: COLORS.white,
         marginVertical: 10,
@@ -57,6 +56,17 @@ const style = StyleSheet.create({
         paddingHorizontal: 10,
         flexDirection: "row",
         alignItems: "center",
+
+        elevation: 13,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
     },
     commonText: {
         fontSize: 16,
