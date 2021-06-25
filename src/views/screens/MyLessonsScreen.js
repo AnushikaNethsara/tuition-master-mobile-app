@@ -16,12 +16,14 @@ import { AsyncStorage } from 'react-native';
 import constants from "../../consts/constants";
 import lessonImage from "../../consts/lessonImage";
 import { PrimaryButton } from "../components/Button";
+import LessonCardSkelton from "../components/loading/LessonCardSkelton"
 const { width } = Dimensions.get("screen");
 const card = width;
 //
 const MyLessonsScreen = ({ navigation }) => {
 
   const [mylessons, setMyLessons] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
 
@@ -29,16 +31,23 @@ const MyLessonsScreen = ({ navigation }) => {
     retrieveUserData();
   }, [])
 
-  const getMyLessons = (id) => {
-    try {
-      axios.get(constants.backend_url + "/purchase/mylessons/" + id)
-        .then(res => {
-          setMyLessons(res.data)
-        })
 
-    } catch (err) {
-      console.log(err.response.data.msg)
-    }
+  const getMyLessons = (id) => {
+    setLoading(true);
+    const timing = setTimeout(() => {
+      try {
+        axios.get(constants.backend_url + "/purchase/mylessons/" + id)
+          .then(res => {
+            setMyLessons(res.data)
+          })
+        setLoading(false);
+
+      } catch (err) {
+        console.log(err)
+      }
+
+    }, 1000);
+    return () => clearTimeout(timing);
   }
 
   const retrieveUserData = async () => {
@@ -138,7 +147,29 @@ const MyLessonsScreen = ({ navigation }) => {
         <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>My Lessons</Text>
       </View>
+      {loading && <LessonCardSkelton />}
+      {!loading &&
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 80 }}
+          data={mylessons}
+          renderItem={({ item }) => (
+            <LessonCard lesson={item} navigation={navigation} key={item._id} />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      }
+
       {
+        mylessons.length != 0 ? (<></>) :
+          (<View>
+            <Text
+              style={{ fontSize: 20, fontWeight: "bold", color: COLORS.grey, textAlign: "center" }}
+            >No Lessons
+            </Text>
+          </View>)
+      }
+      {/* {
         mylessons.length !=0 ? (<View>
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -156,7 +187,7 @@ const MyLessonsScreen = ({ navigation }) => {
         >No Lessons
         </Text>
       </View>)
-      }
+      } */}
 
 
 

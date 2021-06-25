@@ -14,30 +14,57 @@ import { PrimaryButton } from "../components/Button";
 import constants from "../../consts/constants";
 import { AsyncStorage } from 'react-native';
 import axios from "axios";
-import LessonCard from "../components/LessonCard"
+import LessonCard from "../components/LessonCard";
+import LessonCardSkelton from "../components/loading/LessonCardSkelton"
 const { width } = Dimensions.get("screen");
 const card = width;
+
+
+
+
 
 const AllLessonsScreen = ({ navigation }) => {
 
 
   const [allLessons, setAllLessons] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // useEffect(() => {
+  //   getAllLessons();
+  // }, [])
+
+  // const getAllLessons = () => {
+  //   try {
+  //     axios.get(constants.backend_url + "/lesson/")
+  //       .then(res => {
+  //         setAllLessons(res.data)
+  //       })
+
+  //   } catch (err) {
+  //     console.log(err.response.data.msg)
+  //   }
+  // }
+
+
+  
 
   useEffect(() => {
-    getAllLessons();
-  }, [])
+    setLoading(true);
+    const timing = setTimeout(() => {
+      try {
+        axios.get(constants.backend_url + "/lesson/")
+          .then(res => {
+            setAllLessons(res.data)
+          })
+        setLoading(false);
 
-  const getAllLessons = () => {
-    try {
-      axios.get(constants.backend_url + "/lesson/")
-        .then(res => {
-          setAllLessons(res.data)
-        })
+      } catch (err) {
+        console.log(err)
+      }
 
-    } catch (err) {
-      console.log(err.response.data.msg)
-    }
-  }
+    }, 1000);
+    return () => clearTimeout(timing);
+  }, []);
 
   return (
     <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
@@ -45,15 +72,20 @@ const AllLessonsScreen = ({ navigation }) => {
         <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>Find Lesson</Text>
       </View>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 80 }}
-        data={allLessons}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <LessonCard lesson={item} navigation={navigation} key={item._id} />
-        )}
-      />
+      {loading && <LessonCardSkelton />}
+      {!loading &&
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 80 }}
+          data={allLessons}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <LessonCard lesson={item} navigation={navigation} key={item._id} />
+          )}
+        />
+      }
+
+    
     </SafeAreaView>
   );
 };

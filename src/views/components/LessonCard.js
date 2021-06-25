@@ -15,7 +15,7 @@ import { Rating } from "react-native-elements";
 import constants from "../../consts/constants";
 import axios from "axios"
 const card = width;
-
+//
 const LessonCard = ({ navigation, lesson }) => {
 
     const [img, setImg] = useState();
