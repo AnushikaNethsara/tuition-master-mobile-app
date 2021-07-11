@@ -88,7 +88,9 @@ const MyAccount = ({ navigation }) => {
                   style={styles.avatar}
                   source={require("../../assets/profile.png")}
                 />
+                
                 <View style={styles.body}>
+                  {/* <Text style={styles.logout}>Sign out</Text> */}
                   <View style={styles.bodyContent}>
                     <Text style={styles.name}>{item.first_name} {item.last_name}</Text>
                     <Text style={styles.info}>{item.email}</Text>
@@ -97,7 +99,7 @@ const MyAccount = ({ navigation }) => {
                     <Text style={styles.description}>Email:{item.email}</Text>
                     <Text style={styles.description}>Gender:{item.gender}</Text>
                     <Text style={styles.description}>NIC:{item.nic}</Text>
-                    <Text style={styles.description}>Date of Birth:{item.date_of_birth}</Text>
+                    <Text style={styles.description}>Date of Birth:{item.date_of_birth.split("T")[0]}</Text>
 
 
                     <TouchableOpacity onPress={() => navigation.navigate("EditAccountScreen")} style={styles.buttonContainer}>
@@ -208,6 +210,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     color: COLORS.white
   },
+  logout:{
+    textAlign:'right',
+    padding:5,
+    marginRight:5,
+    marginTop:-30,
+  }
 });
 
 export default MyAccount;

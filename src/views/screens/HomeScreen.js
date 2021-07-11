@@ -66,7 +66,7 @@ const HomeScreen = ({ navigation }) => {
         console.log(err)
       }
 
-    }, 1000);
+    }, 500);
     return () => clearTimeout(timing);
   }, []);
 
@@ -133,7 +133,6 @@ const HomeScreen = ({ navigation }) => {
       </View>
       
       <ScrollView style={{ marginHorizontal: 10 }}>
-        {loading && <HomeCardSkelton />}
         {loading && <HomeCardSkelton />}
         {!loading &&
           <SwapCards navigation={navigation} title={"Featured"} lessons={allLessons} />

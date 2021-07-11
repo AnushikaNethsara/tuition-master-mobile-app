@@ -107,7 +107,7 @@ const Register = ({ navigation }) => {
             opacity: 0.4,
           }}
         >
-          Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
+          Sign up to get access for 1000+ course available in Tuition Master as with our newly launched Pay as you go feature.
         </Text>
         <Text style={{
           marginHorizontal: 55,

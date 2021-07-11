@@ -20,7 +20,7 @@ const { width } = Dimensions.get("screen");
 const card = width;
 
 const ViewLessonScreen = ({ navigation, route }) => {
-  const { lesson} = route.params;
+  const { lesson } = route.params;
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   const [mylessons, setMyLessons] = useState([]);
@@ -36,13 +36,13 @@ const ViewLessonScreen = ({ navigation, route }) => {
         <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>View Lessons</Text>
       </View>
-      <View style={{marginTop:-250}}>
+      <View style={{ marginTop: -250 }}>
         <View>
           <Video
             ref={video}
-            style={{  height: "90%",marginHorizontal:3 }}
+            style={{ height: "90%", marginHorizontal: 3 }}
             source={{
-              uri: lesson.lesson_id.video_path
+              uri: constants.backend_url + lesson.lesson_id.video_path
             }}
             useNativeControls
             resizeMode="contain"

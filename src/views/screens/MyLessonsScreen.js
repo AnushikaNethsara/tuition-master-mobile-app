@@ -46,7 +46,7 @@ const MyLessonsScreen = ({ navigation }) => {
         console.log(err)
       }
 
-    }, 1000);
+    }, 100);
     return () => clearTimeout(timing);
   }
 

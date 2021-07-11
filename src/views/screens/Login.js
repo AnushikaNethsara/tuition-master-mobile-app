@@ -82,7 +82,9 @@ const Login = ({ navigation }) => {
             opacity: 0.4,
           }}
         >
-          Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
+          Welcome to the Tuition Master website. 
+          Your favorite tuition master is now finger tip away. 
+          We support Over 1000 video courses on school grades with multi medium
         </Text>
         <Text style={{
           marginHorizontal: 55,
@@ -101,7 +103,9 @@ const Login = ({ navigation }) => {
         </View>
         <View style={style.passwordView}>
           <Icon name="lock" color="#00716F" size={24} />
-          <TextInput placeholder="Password" style={{ paddingHorizontal: 10, height: 45, fontSize: 18 }} onChangeText={text => setPassword(text)} />
+          <TextInput
+            secureTextEntry={true}
+            placeholder="Password" style={{ paddingHorizontal: 10, height: 45, fontSize: 18 }} onChangeText={text => setPassword(text)} />
         </View>
 
         <TouchableOpacity onPress={onSubmit}>

@@ -61,10 +61,20 @@ const DetailsScreen = ({ navigation, route }) => {
             height: 280,
           }}>
           <Image source={{
-            uri: constants.backend_url + `/lesson/lesson-photo/${lesson._id}`,
+            uri: constants.backend_url + lesson.photo,
           }}
             style={{ height: 220, width: 220 }}
           />
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            <Text style={style.rate}>({rate})</Text>
+            <Rating
+              style={{ marginTop: 12, paddingHorizontal: 10 }}
+              imageSize={20}
+              startingValue={rate}
+              readonly={true}
+            />
+            <Text style={style.rate} >({allCount})</Text>
+          </View>
         </View>
         <View style={style.details}>
           <View
@@ -93,16 +103,7 @@ const DetailsScreen = ({ navigation, route }) => {
             <Text style={style.master}>
               {lesson.master_id.first_name}{" "}{lesson.master_id.last_name}
             </Text>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              <Text style={style.rate}>({rate})</Text>
-              <Rating
-                style={{ marginTop: 12, paddingHorizontal:10 }}
-                imageSize={20}
-                startingValue={rate}
-                readonly={true}
-              />
-              <Text style={style.rate} >({allCount})</Text>
-            </View>
+
           </View>
           <Text style={style.detailsText}>
             {lesson.description}
@@ -179,7 +180,7 @@ const style = StyleSheet.create({
   rate: {
     marginTop: 10,
     fontSize: 17,
-    color: COLORS.white,
+    color: "#000000",
     fontWeight: "bold",
     marginLeft: 0
   }
