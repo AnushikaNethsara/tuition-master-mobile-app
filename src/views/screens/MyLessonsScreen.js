@@ -46,7 +46,7 @@ const MyLessonsScreen = ({ navigation }) => {
         console.log(err)
       }
 
-    }, 100);
+    }, 1);
     return () => clearTimeout(timing);
   }
 
@@ -100,7 +100,7 @@ const MyLessonsScreen = ({ navigation }) => {
       <TouchableHighlight
         underlayColor={COLORS.white}
         activeOpacity={0.9}
-        onPress={() => navigation.navigate("ViewLessonScreen", { lesson: lesson })}
+        onPress={() => navigation.navigate("LessonResourcesScreen", { lesson: lesson, studentId: userId })}
         key={lesson._id}
       >
         <View style={style.lessonCard}>
@@ -169,25 +169,6 @@ const MyLessonsScreen = ({ navigation }) => {
             </Text>
           </View>)
       }
-      {/* {
-        mylessons.length !=0 ? (<View>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 80 }}
-            data={mylessons}
-            renderItem={({ item }) => (
-              <LessonCard lesson={item} navigation={navigation} key={item._id} />
-            )}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>):
-      (<View>
-        <Text
-          style={{ fontSize: 20, fontWeight: "bold", color: COLORS.grey, textAlign: "center" }}
-        >No Lessons
-        </Text>
-      </View>)
-      } */}
 
 
 

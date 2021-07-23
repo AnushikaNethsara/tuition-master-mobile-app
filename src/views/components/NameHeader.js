@@ -3,9 +3,11 @@ import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import COLORS from "../../consts/colors";
 import Search from "../components/Search";
 import { TouchableHighlight } from "react-native-gesture-handler";
+import user from "../../assets/user.png";
+import constants from "../../consts/constants";
 
-const NameHeader = ({ navigation, userName}) => {
- 
+const NameHeader = ({ navigation, userName, photo }) => {
+
   return (
     <View>
       <View style={style.header}>
@@ -25,10 +27,19 @@ const NameHeader = ({ navigation, userName}) => {
           activeOpacity={0.9}
           onPress={() => navigation.navigate("MyAccount")}
         >
-          <Image
-            source={require("../../assets/profile.png")}
-            style={{ height: 50, width: 50, borderRadius: 25 }}
-          />
+          {
+            photo === "" ? (
+              <Image
+                source={user}
+                style={{ height: 50, width: 50, borderRadius: 25 }}
+              />
+            ) : (
+              <Image
+                source={{ uri: constants.backend_url + photo }}
+                style={{ height: 50, width: 50, borderRadius: 25 }}
+              />
+            )
+          }
         </TouchableHighlight>
       </View>
     </View>

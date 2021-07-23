@@ -30,6 +30,7 @@ const HomeScreen = ({ navigation }) => {
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
   const [userName, setUserName] = useState("");
+  const [photo, setPhoto] = useState();
   const [allLessons, setAllLessons] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -44,6 +45,7 @@ const HomeScreen = ({ navigation }) => {
         .then(res => {
           res.data.forEach(element => {
             setUserName(element.first_name)
+            setPhoto(element.photo)
           });
         })
 
@@ -66,7 +68,7 @@ const HomeScreen = ({ navigation }) => {
         console.log(err)
       }
 
-    }, 500);
+    }, 100);
     return () => clearTimeout(timing);
   }, []);
 
@@ -85,7 +87,7 @@ const HomeScreen = ({ navigation }) => {
         console.log(err.response.data.msg)
       }
 
-    }, 1000);
+    }, 100);
     return () => clearTimeout(timing);
   }
 
@@ -118,7 +120,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-      <NameHeader navigation={navigation} userName={userName} />
+      <NameHeader navigation={navigation} userName={userName} photo={photo}/>
       <View style={{ height: cardWidth / 2, width: cardWidth }}>
         <Image
           style={{
@@ -131,7 +133,7 @@ const HomeScreen = ({ navigation }) => {
           source={imageItem.image}
         />
       </View>
-      
+
       <ScrollView style={{ marginHorizontal: 10 }}>
         {loading && <HomeCardSkelton />}
         {!loading &&
@@ -140,7 +142,7 @@ const HomeScreen = ({ navigation }) => {
         {!loading &&
           <SwapCards navigation={navigation} title={"Students are viewing"} lessons={allLessons} />
         }
-        
+
       </ScrollView>
     </SafeAreaView>
   );

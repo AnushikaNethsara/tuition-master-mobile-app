@@ -62,7 +62,7 @@ const AllLessonsScreen = ({ navigation }) => {
         console.log(err)
       }
 
-    }, 500);
+    }, 100);
     return () => clearTimeout(timing);
   }, []);
 

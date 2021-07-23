@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, StyleSheet, View, Text, Image } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, Image, Alert, Modal, Pressable, TouchableOpacity } from 'react-native';
+import { WebView } from 'react-native-webview';
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../../consts/colors';
@@ -7,18 +8,66 @@ import { SecondaryButton } from '../components/Button';
 import axios from "axios";
 import constants from "../../consts/constants";
 import { Rating } from "react-native-elements";
+import { AsyncStorage } from 'react-native';
 
 
 const DetailsScreen = ({ navigation, route }) => {
-  //const item = route.params;
 
   const { lesson } = route.params;
   const [rate, setRate] = useState(0);
   const [allCount, setAllCount] = useState(0);
+  const [showModel, setShowModel] = useState(false);
+  const [status, setStatus] = useState("Pending");
+  const [lessonStatus, setLessonStatus] = useState(false);
+  const [userId, setUserId] = useState();
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     getRatings();
+    getLessonStatus();
   }, [])
+
+  const handleResponse = (data) => {
+    if (data.title === "success") {
+      setShowModel(false);
+      setStatus("Complete");
+      proceed();
+    } else if (data.title === "cancel") {
+      setShowModel(false);
+      setStatus("Cancelled")
+    } else {
+      return;
+    }
+  };
+
+  const proceed = async () => {
+    var studentId = await AsyncStorage.getItem('userId');
+    console.log("u: " + studentId)
+    console.log("u: " + lesson._id)
+    await axios.post(
+      constants.backend_url + "/purchase/addlesson-to-student-account",
+      {
+        student_id: studentId,
+        lesson_id: lesson._id,
+      }
+    ).catch(function (error) {
+      console.log(error);
+      Alert.alert(
+        "Alert",
+        "Something went wrong!",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") }
+        ]
+      );
+    });
+    navigation.navigate("MyLessons");
+  }
+
 
   const getRatings = () => {
     try {
@@ -37,8 +86,38 @@ const DetailsScreen = ({ navigation, route }) => {
     }
   }
 
+  const getLessonStatus = async () => {
+    try {
+      var studentId = await AsyncStorage.getItem('userId');
+      axios.get(constants.backend_url + "/lesson/view-buy/" + lesson._id + "/" + studentId)
+        .then(res => {
+          if (res.data.msg === "view") {
+            setLessonStatus(true)
+          }
+          if (res.data.msg === "buy") {
+            setLessonStatus(false)
+          }
+        })
+
+    } catch (err) {
+      console.log(err.response.data.msg)
+    }
+  }
+
   return (
     <SafeAreaView style={{ backgroundColor: COLORS.white }}>
+      <Modal
+        visible={showModel}
+        onRequestClose={() => setShowModel(false)}
+      >
+        <WebView
+          source={{ uri: "http://192.168.1.11:5008/paypal" }}
+          onNavigationStateChange={data =>
+            handleResponse(data)
+          }
+          injectedJavaScript={`document.f1.submit()`}
+        />
+      </Modal>
       <View style={style.header}>
         <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Details</Text>
@@ -65,6 +144,7 @@ const DetailsScreen = ({ navigation, route }) => {
           }}
             style={{ height: 220, width: 220 }}
           />
+          <Text>Payment Status: {status}</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             <Text style={style.rate}>({rate})</Text>
             <Rating
@@ -111,9 +191,27 @@ const DetailsScreen = ({ navigation, route }) => {
           <Text style={style.price}>
             {lesson.price}{" "}{"LKR"}
           </Text>
-          <View style={{ marginTop: 20, marginBottom: 40 }}>
-            <SecondaryButton title={"Buy Now "} />
-          </View>
+          {
+            lessonStatus ? (
+              <View
+                style={{ marginTop: 20, marginBottom: 40 }}
+              >
+                <SecondaryButton
+                  onPress={() => navigation.navigate("MyLessons")}
+                  title={"View Lesson"}
+                />
+              </View>
+            ) : (
+              <View
+                style={{ marginTop: 20, marginBottom: 40 }}
+              >
+                <SecondaryButton
+                  onPress={() => setShowModel(true)}
+                  title={"Buy Now "}
+                />
+              </View>
+            )
+          }
         </View>
       </ScrollView>
     </SafeAreaView>

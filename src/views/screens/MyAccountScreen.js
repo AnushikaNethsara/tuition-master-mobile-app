@@ -16,8 +16,10 @@ import lessons from "../../consts/lessons";
 import { PrimaryButton } from "../components/Button";
 import constants from "../../consts/constants";
 import { AsyncStorage } from 'react-native';
-import axios from "axios"
+import axios from "axios";
+import user from "../../assets/user.png";
 const { width } = Dimensions.get("screen");
+
 
 const card = width;
 
@@ -35,7 +37,6 @@ const MyAccount = ({ navigation }) => {
     try {
       axios.get(constants.backend_url + "/student/studentaccountdetails/" + id)
         .then(res => {
-          console.log(res.data);
           setStudentsDeatils(res.data);
         })
 
@@ -84,11 +85,20 @@ const MyAccount = ({ navigation }) => {
             return (
               <View style={styles.container} key={index}>
                 <View style={styles.header2}></View>
-                <Image
-                  style={styles.avatar}
-                  source={require("../../assets/profile.png")}
-                />
-                
+                {
+                  item.photo === "" ? (
+                    <Image
+                      style={styles.avatar}
+                      source={user}
+                    />
+                  ) : (
+                    <Image
+                      style={styles.avatar}
+                      source={{ uri: constants.backend_url + item.photo }}
+                    />
+                  )
+                }
+
                 <View style={styles.body}>
                   {/* <Text style={styles.logout}>Sign out</Text> */}
                   <View style={styles.bodyContent}>
@@ -186,6 +196,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: "#696969",
     fontWeight: "600",
+    textAlign:"center"
   },
   info: {
     fontSize: 16,
@@ -210,11 +221,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     color: COLORS.white
   },
-  logout:{
-    textAlign:'right',
-    padding:5,
-    marginRight:5,
-    marginTop:-30,
+  logout: {
+    textAlign: 'right',
+    padding: 5,
+    marginRight: 5,
+    marginTop: -30,
   }
 });
 
