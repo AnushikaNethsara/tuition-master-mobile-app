@@ -104,13 +104,13 @@ const MyAccount = ({ navigation }) => {
                   <View style={styles.bodyContent}>
                     <Text style={styles.name}>{item.first_name} {item.last_name}</Text>
                     <Text style={styles.info}>{item.email}</Text>
-                    <Text style={styles.description}>First Name : {item.first_name}</Text>
-                    <Text style={styles.description}>Last Name : {item.last_name}</Text>
-                    <Text style={styles.description}>Email:{item.email}</Text>
-                    <Text style={styles.description}>Gender:{item.gender}</Text>
-                    <Text style={styles.description}>NIC:{item.nic}</Text>
-                    <Text style={styles.description}>Date of Birth:{item.date_of_birth.split("T")[0]}</Text>
-
+                    <Text style={styles.description}>First Name :{" "} {item.first_name}</Text>
+                    <Text style={styles.description}>Last Name :{" "} {item.last_name}</Text>
+                    <Text style={styles.description}>Email:{" "}{item.email}</Text>
+                    <Text style={styles.description}>Gender:{" "}{item.gender}</Text>
+                    <Text style={styles.description}>NIC:{" "}{item.nic}</Text>
+                    <Text style={styles.description}>Date of Birth:{" "}{item.date_of_birth.split("T")[0]}</Text>
+                    <Text style={styles.description}>Current Grade:{" "}{item.current_grade}</Text>
 
                     <TouchableOpacity onPress={() => navigation.navigate("EditAccountScreen")} style={styles.buttonContainer}>
                       <Text

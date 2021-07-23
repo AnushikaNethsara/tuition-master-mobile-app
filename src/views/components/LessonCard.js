@@ -15,7 +15,7 @@ import { Rating } from "react-native-elements";
 import constants from "../../consts/constants";
 import axios from "axios"
 const card = width;
-//
+
 const LessonCard = ({ navigation, lesson }) => {
 
     const [img, setImg] = useState();
@@ -29,7 +29,7 @@ const LessonCard = ({ navigation, lesson }) => {
             var index = lessonImage.findIndex(element => element.subject === lesson.subject)
             setImg(lessonImage[index].image)
         } else {
-            setImg(lessonImage[3].image)
+            setImg(lessonImage[11].image)
         }
 
     }

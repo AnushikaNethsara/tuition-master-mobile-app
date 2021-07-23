@@ -4,7 +4,7 @@ import { WebView } from 'react-native-webview';
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../../consts/colors';
-import { SecondaryButton } from '../components/Button';
+import { SecondaryButton, FeedbackButton } from '../components/Button';
 import axios from "axios";
 import constants from "../../consts/constants";
 import { Rating } from "react-native-elements";
@@ -188,9 +188,17 @@ const DetailsScreen = ({ navigation, route }) => {
           <Text style={style.detailsText}>
             {lesson.description}
           </Text>
+          <View>
+            <FeedbackButton
+              onPress={() => setShowModel(true)}
+              title={"Feedbacks"}
+              onPress={() => navigation.navigate("FeedbacksScreen", { lessonId: lesson._id })}
+            />
+          </View>
           <Text style={style.price}>
             {lesson.price}{" "}{"LKR"}
           </Text>
+
           {
             lessonStatus ? (
               <View
@@ -212,6 +220,11 @@ const DetailsScreen = ({ navigation, route }) => {
               </View>
             )
           }
+
+          <View
+            style={{ marginTop: 20, marginBottom: 40 }}
+          >
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

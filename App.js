@@ -13,7 +13,7 @@ import Login from "./src/views/screens/Login";
 // import Player from "./src/views/screens/Example";
 import EditAccount from "./src/views/screens/EditAccountScreen";
 import LessonResourcesScreen from "./src/views/screens/LessonResourcesScreen";
-
+import FeedbacksScreen from "./src/views/screens/FeedbacksScreen";
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -29,6 +29,7 @@ const App = () => {
         <Stack.Screen name="LoginScreen" component={Login} />
         <Stack.Screen name="EditAccountScreen" component={EditAccount} />
         <Stack.Screen name="LessonResourcesScreen" component={LessonResourcesScreen} />
+        <Stack.Screen name="FeedbacksScreen" component={FeedbacksScreen} />
         {/* <Stack.Screen name="Player" component={Player} /> */}
       </Stack.Navigator>
     </NavigationContainer>

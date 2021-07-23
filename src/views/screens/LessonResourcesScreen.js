@@ -34,7 +34,7 @@ const LessonResourcesScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);
     const [token, setToken] = useState("");
     const [userId, setUserId] = useState("");
-    const [modalVisible, setModalVisible] = useState(true);
+    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         retrieveUserData();

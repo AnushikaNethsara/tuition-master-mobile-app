@@ -5,7 +5,7 @@ const lessonImage = [
 
     },
     {
-        subject: "English",
+        subject: "English Language",
         image: require("../assets/card-les/English.png"),
 
     },

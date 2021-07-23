@@ -79,7 +79,7 @@ const BottomNavigator = () => {
       />
       <Tab.Screen
         name="MyAccount"
-        component={Example}
+        component={MyAccount}
         options={{
           tabBarIcon: ({ color }) => (
             <Icon name="account-circle" color={color} size={28} />
