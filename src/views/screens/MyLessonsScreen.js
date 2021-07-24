@@ -46,7 +46,7 @@ const MyLessonsScreen = ({ navigation }) => {
         console.log(err)
       }
 
-    }, 1);
+    }, 350);
     return () => clearTimeout(timing);
   }
 
@@ -80,10 +80,9 @@ const MyLessonsScreen = ({ navigation }) => {
     const [img, setImg] = useState();
 
     const getLessonImage = () => {
-      var cardSubject = lesson.subject;
-
-      if (lessonImage.find(element => element.subject === lesson.subject)) {
-        var index = lessonImage.findIndex(element => element.subject === lesson.subject)
+      var cardSubject = lesson.lesson_id.subject;
+      if (lessonImage.find(element => element.subject === cardSubject)) {
+        var index = lessonImage.findIndex(element => element.subject === cardSubject)
         setImg(lessonImage[index].image)
       } else {
         setImg(lessonImage[3].image)
@@ -114,7 +113,7 @@ const MyLessonsScreen = ({ navigation }) => {
             }}
           >
             <Text
-              style={{ fontWeight: "bold", fontSize: 20, textAlign: "left", marginTop: -20 }}
+              style={{ fontWeight: "bold", fontSize: 15, textAlign: "left", marginTop: -15 }}
             >
               {lesson.lesson_id.lesson}
             </Text>
@@ -127,7 +126,7 @@ const MyLessonsScreen = ({ navigation }) => {
               </Text>
             </View>
             <Text
-              numberOfLines={3}
+              numberOfLines={2}
               style={{
                 fontSize: 16,
                 color: COLORS.grey,
@@ -164,7 +163,7 @@ const MyLessonsScreen = ({ navigation }) => {
         mylessons.length != 0 ? (<></>) :
           (<View>
             <Text
-              style={{ fontSize: 20, fontWeight: "bold", color: COLORS.grey, textAlign: "center",marginTop:-500 }}
+              style={{ fontSize: 20, fontWeight: "bold", color: COLORS.grey, textAlign: "center", marginTop: -500 }}
             >No Lessons
             </Text>
           </View>)
@@ -192,6 +191,12 @@ const style = StyleSheet.create({
     paddingHorizontal: 10,
     flexDirection: "row",
     alignItems: "center",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   commonText: {
     fontSize: 16,

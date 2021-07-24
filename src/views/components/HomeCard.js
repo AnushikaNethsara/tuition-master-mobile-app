@@ -30,7 +30,6 @@ const HomeCard = ({ navigation, lesson }) => {
 
   const getLessonImage = () => {
     var cardSubject = lesson.subject;
-
     if (lessonImage.find(element => element.subject === lesson.subject)) {
       var index = lessonImage.findIndex(element => element.subject === lesson.subject)
       setImg(lessonImage[index].image)

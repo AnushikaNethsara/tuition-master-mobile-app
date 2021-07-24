@@ -24,7 +24,7 @@ import { Rating } from "react-native-elements";
 
 
 const SearchScreen = ({ navigation }) => {
-  const [grade, setGrade] = useState("Grade 13");
+  const [grade, setGrade] = useState("Grade 11");
   const [data, setData] = useState([]);
 
   useEffect(() => {

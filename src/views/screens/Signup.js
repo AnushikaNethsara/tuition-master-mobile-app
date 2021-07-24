@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   Picker,
   Platform,
-  Button
+  Button,
+  Dimensions
 } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from "@expo/vector-icons/AntDesign";
@@ -17,6 +18,8 @@ import COLORS from "../../consts/colors";
 import { PrimaryButton } from '../components/Button';
 import constants from "../../consts/constants";
 import axios from "axios"
+const { width } = Dimensions.get("screen");
+
 
 const Register = ({ navigation }) => {
   const [firstName, setFirstName] = useState("");
@@ -160,21 +163,21 @@ const Register = ({ navigation }) => {
         </View>
         <View style={style.inputView}>
           <Icon name="user" color="#00716F" size={24} />
-          <Picker
+          {/* <Picker
             selectedValue={gender}
             placeholder="Gender"
-            style={{ height: 50, width: "90%", fontSize: 18, color:"#00716F"}}
+            style={{ height: 50, width: width-20, fontSize: 18, color:"#00716F"}}
             onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
           >
             <Picker.Item label="Male" value="Male" />
             <Picker.Item label="Female" value="Female" />
-          </Picker>
-          {/* <TextInput
-            placeholder="Gender"
+          </Picker> */}
+          <TextInput
+            placeholder="Select Gender"
             placeholderTextColor="#00716F"
             style={{ paddingHorizontal: 10, height:45,fontSize:18 }}
-            onChangeText={text => setGender(text)}
-          /> */}
+            //onChangeText={text => setGender(text)}
+          />
         </View>
         <TouchableOpacity onPress={showDatepicker} activeOpacity={1}>
           <View style={style.inputView}>

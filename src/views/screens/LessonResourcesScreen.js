@@ -61,7 +61,7 @@ const LessonResourcesScreen = ({ navigation, route }) => {
             console.log(err)
         }
     }
-    
+
 
 
     const retrieveUserData = async () => {
@@ -94,7 +94,7 @@ const LessonResourcesScreen = ({ navigation, route }) => {
         <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
             <View style={style.header}>
                 <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
-                <Text style={{ fontSize: 28, fontWeight: "bold" }}>  {lesson.lesson_id.lesson}</Text>
+                <Text style={{ fontSize: 20, fontWeight: "bold" }}>  {lesson.lesson_id.lesson}</Text>
             </View>
 
             {/* video card */}
@@ -128,6 +128,7 @@ const LessonResourcesScreen = ({ navigation, route }) => {
                                 }}
                             >
                                 <Text
+                                    numberOfLines={2}
                                     style={{ fontWeight: "bold", fontSize: 20, textAlign: "left", marginTop: 10 }}
                                 >
                                     {lesson.lesson_id.lesson}
@@ -168,7 +169,7 @@ const LessonResourcesScreen = ({ navigation, route }) => {
                             {
                                 lesson.lesson_id.pdf_paths.map((item, index) => {
                                     return (
-                                        <Pressable style={style.pdfCard} key={index}>
+                                        <Pressable style={style.pdfCard} key={index} onPress={() => OpenAnything.Pdf(constants.backend_url + item)}>
                                             <Image source={pdfButton} style={{ height: 90, width: 90, marginTop: 15 }} />
                                             <View>
                                                 <Text style={style.pdfTitle}>
@@ -197,7 +198,7 @@ const LessonResourcesScreen = ({ navigation, route }) => {
                         setModalVisible(!modalVisible);
                     }}
                 >
-                    <RatingModel closeModel={closeModel} studentId={studentId} lessonId={lesson.lesson_id._id}/>
+                    <RatingModel closeModel={closeModel} studentId={studentId} lessonId={lesson.lesson_id._id} />
                 </Modal>
             </View>
             {/* end model view */}

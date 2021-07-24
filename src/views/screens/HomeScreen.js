@@ -87,7 +87,7 @@ const HomeScreen = ({ navigation }) => {
         console.log(err.response.data.msg)
       }
 
-    }, 100);
+    }, 500);
     return () => clearTimeout(timing);
   }
 

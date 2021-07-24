@@ -144,7 +144,6 @@ const DetailsScreen = ({ navigation, route }) => {
           }}
             style={{ height: 220, width: 220 }}
           />
-          <Text>Payment Status: {status}</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
             <Text style={style.rate}>({rate})</Text>
             <Rating

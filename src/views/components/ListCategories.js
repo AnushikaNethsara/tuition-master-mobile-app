@@ -19,7 +19,7 @@ import COLORS from "../../consts/colors";
 const { width } = Dimensions.get("screen");
 
 const ListCategories = (props) => {
-  const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(2);
   return (
     <ScrollView
       horizontal
