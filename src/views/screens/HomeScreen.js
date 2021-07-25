@@ -32,11 +32,13 @@ const HomeScreen = ({ navigation }) => {
   const [userName, setUserName] = useState("");
   const [photo, setPhoto] = useState();
   const [allLessons, setAllLessons] = useState([]);
+  const [recomendedLessons, setRecomendedLessons] = useState([])
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     retrieveUserData();
     getAllLessons();
+    getRecomendedLessons();
   }, [])
 
   const getUserDetails = (id) => {
@@ -68,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
         console.log(err)
       }
 
-    }, 100);
+    }, 500);
     return () => clearTimeout(timing);
   }, []);
 
@@ -79,7 +81,29 @@ const HomeScreen = ({ navigation }) => {
       try {
         axios.get(constants.backend_url + "/lesson/")
           .then(res => {
-            setAllLessons(res.data)
+            var array = res.data;
+            array = array.sort(() => Math.random() - 1)
+            setAllLessons(array)
+          })
+        setLoading(false);
+
+      } catch (err) {
+        console.log(err.response.data.msg)
+      }
+
+    }, 500);
+    return () => clearTimeout(timing);
+  }
+
+  const getRecomendedLessons = async () => {
+
+    setLoading(true);
+    const userId = await AsyncStorage.getItem('userId');
+    const timing = setTimeout(() => {
+      try {
+        axios.get(constants.backend_url + "/lesson/recommend/" + userId)
+          .then(res => {
+            setRecomendedLessons(res.data)
           })
         setLoading(false);
 
@@ -120,7 +144,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-      <NameHeader navigation={navigation} userName={userName} photo={photo}/>
+      <NameHeader navigation={navigation} userName={userName} photo={photo} />
       <View style={{ height: cardWidth / 2, width: cardWidth }}>
         <Image
           style={{
@@ -137,12 +161,11 @@ const HomeScreen = ({ navigation }) => {
       <ScrollView style={{ marginHorizontal: 10 }}>
         {loading && <HomeCardSkelton />}
         {!loading &&
-          <SwapCards navigation={navigation} title={"Featured"} lessons={allLessons} />
+          <SwapCards navigation={navigation} title={"Students are viewing"} lessons={recomendedLessons} />
         }
         {!loading &&
-          <SwapCards navigation={navigation} title={"Students are viewing"} lessons={allLessons} />
+          <SwapCards navigation={navigation} title={"Featured"} lessons={allLessons} />
         }
-
       </ScrollView>
     </SafeAreaView>
   );

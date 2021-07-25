@@ -32,10 +32,10 @@ const ViewLessonScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
-      <View style={style.header}>
+      {/* <View style={style.header}>
         <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
         <Text style={{ fontSize: 20, fontWeight: "bold" }}>View Lessons</Text>
-      </View>
+      </View> */}
       <View style={{ marginTop: -250 }}>
         <View>
           <Video
@@ -57,6 +57,14 @@ const ViewLessonScreen = ({ navigation, route }) => {
                 : video.current.playAsync()
             }
           />
+          <View style={{ paddingVertical: 5 }}>
+            <Button
+
+              title={"Back to Resources"}
+              onPress={navigation.goBack}
+            />
+          </View>
+
         </View>
       </View>
     </SafeAreaView>

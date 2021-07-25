@@ -51,8 +51,9 @@ const HomeCard = ({ navigation, lesson }) => {
         .then(res => {
           var total = res.data.total;
           var count = res.data.count;
+          var actualRate = (total / count).toFixed(1);
           if (total != 0 && count != 0) {
-            setRate(total / count);
+            setRate(actualRate);
             setAllCount(count);
           }
         })
