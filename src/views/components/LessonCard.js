@@ -49,9 +49,9 @@ const LessonCard = ({ navigation, lesson }) => {
                 .then(res => {
                     var total = res.data.total;
                     var count = res.data.count;
-                    var actualRate = (total / count).toFixed(1);
                     if (total != 0 && count != 0) {
-                        setRate(actualRate);
+                        var actualRate = (total / count);
+                        setRate(parseFloat(actualRate.toFixed(1)));
                         setAllCount(count);
                     }
                 })

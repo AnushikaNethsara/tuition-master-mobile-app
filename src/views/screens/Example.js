@@ -1,58 +1,107 @@
-import React, { useState, Component } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View, TouchableOpacity } from "react-native";
-import { WebView } from 'react-native-webview';
+import React, { useState } from 'react';
+import { RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text } from 'react-native';
 
-class Example extends Component {
-  state = {
-    showModal: false,
-    status: "Pending"
-  };
-  handleResponse = data => {
-    if (data.title === "success") {
-      this.setState({ showModal: false, status: "Complete" });
-    } else if (data.title === "cancel") {
-      this.setState({ showModal: false, status: "Cancelled" });
-    } else {
-      return;
-    }
-  };
-  render() {
-    return (
-      <View style={{ marginTop: 100 }}>
-        <Modal
-          visible={this.state.showModal}
-          onRequestClose={() => this.setState({ showModal: false })}
-        >
-          <WebView
-            source={{ uri: "http://192.168.1.11:5008/paypal" }}
-            onNavigationStateChange={data =>
-              this.handleResponse(data)
-            }
-            injectedJavaScript={`document.f1.submit()`}
-          />
-        </Modal>
-        <TouchableOpacity
-          style={{ width: 300, height: 100 }}
-          onPress={() => this.setState({ showModal: true })}
-        >
-          <Text>Pay with Paypal</Text>
-        </TouchableOpacity>
-        <Text>Payment Status: {this.state.status}</Text>
-      </View>
-    );
-  }
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
 }
+
+const Example = () => {
+  const [refreshing, setRefreshing] = React.useState(false);
+  const[hoy,setHey]=useState("");
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    setHey("HU")
+  }, []);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scrollView}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
+        <Text>{hoy}</Text>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+    backgroundColor: 'pink',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 export default Example;
 
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  }
-});
+
+// import React, { useState, Component } from "react";
+// import { Alert, Modal, StyleSheet, Text, Pressable, View, TouchableOpacity } from "react-native";
+// import { WebView } from 'react-native-webview';
+
+// class Example extends Component {
+//   state = {
+//     showModal: false,
+//     status: "Pending"
+//   };
+//   handleResponse = data => {
+//     if (data.title === "success") {
+//       this.setState({ showModal: false, status: "Complete" });
+//     } else if (data.title === "cancel") {
+//       this.setState({ showModal: false, status: "Cancelled" });
+//     } else {
+//       return;
+//     }
+//   };
+//   render() {
+//     return (
+//       <View style={{ marginTop: 100 }}>
+//         <Modal
+//           visible={this.state.showModal}
+//           onRequestClose={() => this.setState({ showModal: false })}
+//         >
+//           <WebView
+//             source={{ uri: "http://192.168.1.11:5008/paypal" }}
+//             onNavigationStateChange={data =>
+//               this.handleResponse(data)
+//             }
+//             injectedJavaScript={`document.f1.submit()`}
+//           />
+//         </Modal>
+//         <TouchableOpacity
+//           style={{ width: 300, height: 100 }}
+//           onPress={() => this.setState({ showModal: true })}
+//         >
+//           <Text>Pay with Paypal</Text>
+//         </TouchableOpacity>
+//         <Text>Payment Status: {this.state.status}</Text>
+//       </View>
+//     );
+//   }
+// }
+
+// export default Example;
+
+// const styles = StyleSheet.create({
+//   centeredView: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center",
+//     marginTop: 22
+//   }
+// });
 
 
 

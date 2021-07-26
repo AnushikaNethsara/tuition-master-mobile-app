@@ -6,6 +6,8 @@ import {
   Text,
   Image,
   Dimensions,
+  RefreshControl,
+  ScrollView
 } from "react-native";
 import { FlatList, TouchableHighlight } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -19,24 +21,36 @@ import { PrimaryButton } from "../components/Button";
 import LessonCardSkelton from "../components/loading/LessonCardSkelton"
 const { width } = Dimensions.get("screen");
 const card = width;
-//
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
 const MyLessonsScreen = ({ navigation }) => {
 
   const [mylessons, setMyLessons] = useState([]);
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState("");
   const [userId, setUserId] = useState("");
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+    getMyLessons();
+  }, []);
 
   useEffect(() => {
     retrieveUserData();
   }, [])
 
 
-  const getMyLessons = (id) => {
+  const getMyLessons =async () => {
+    const getUserId = await AsyncStorage.getItem('userId');
     setLoading(true);
     const timing = setTimeout(() => {
       try {
-        axios.get(constants.backend_url + "/purchase/mylessons/" + id)
+        axios.get(constants.backend_url + "/purchase/mylessons/" + getUserId)
           .then(res => {
             setMyLessons(res.data)
           })
@@ -46,7 +60,7 @@ const MyLessonsScreen = ({ navigation }) => {
         console.log(err)
       }
 
-    }, 350);
+    }, constants.timeOut);
     return () => clearTimeout(timing);
   }
 
@@ -56,7 +70,7 @@ const MyLessonsScreen = ({ navigation }) => {
       const getUserId = await AsyncStorage.getItem('userId');
       if (getToken !== null && getUserId !== null) {
         setToken(getToken);
-        setUserId(getUserId);
+        setUserId();
         getMyLessons(getUserId);
       }
     } catch (error) {
@@ -148,15 +162,23 @@ const MyLessonsScreen = ({ navigation }) => {
       </View>
       {loading && <LessonCardSkelton />}
       {!loading &&
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 80 }}
-          data={mylessons}
-          renderItem={({ item }) => (
-            <LessonCard lesson={item} navigation={navigation} key={item._id} />
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+        >
+          {
+            mylessons.map((item)=>{
+              return(
+                <LessonCard lesson={item} navigation={navigation} key={item._id} />
+              )
+            })
+          }
+        </ScrollView>
+        
       }
 
       {

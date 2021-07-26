@@ -4,7 +4,8 @@ import {
   StyleSheet,
   View,
   ScrollView,
-  Text
+  Text,
+  RefreshControl
 } from "react-native";
 import {
   FlatList,
@@ -22,10 +23,20 @@ import lessons from "../../consts/lessons";
 import constants from "../../consts/constants";
 import { Rating } from "react-native-elements";
 
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 const SearchScreen = ({ navigation }) => {
   const [grade, setGrade] = useState("Grade 11");
   const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
 
   useEffect(() => {
     getAllLessons();
@@ -46,7 +57,7 @@ const SearchScreen = ({ navigation }) => {
 
   const getSearchedLessons = (keyword) => {
     try {
-      if(keyword !=""){
+      if (keyword != "") {
         axios.get(constants.backend_url + "/lesson/search/" + keyword)
           .then(res => {
             const array = chunkArray(res.data)
@@ -103,7 +114,15 @@ const SearchScreen = ({ navigation }) => {
           ) : (<></>)
       }
 
-      <ScrollView style={{ marginHorizontal: 10 }}>
+      <ScrollView
+        style={{ marginHorizontal: 10 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         {data &&
           data.map((item, index) => {
             return (

@@ -1,6 +1,7 @@
 
-const constants ={
-    backend_url:'http://192.168.1.11:5008',
+const constants = {
+    backend_url: 'http://192.168.1.11:5008',
+    timeOut: 500
 }
 
 export default constants;

@@ -7,7 +7,7 @@ import {
   Dimensions,
   Text,
   ScrollView,
-  Alert
+  Alert, RefreshControl
 } from "react-native";
 import { FlatList, TouchableHighlight } from "react-native-gesture-handler";
 import COLORS from "../../consts/colors";
@@ -24,7 +24,9 @@ import axios from "axios"
 const { width } = Dimensions.get("screen");
 const cardWidth = width - 20;
 
-
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 const HomeScreen = ({ navigation }) => {
   const [selectedImage, setSelectedImage] = useState();
   const [token, setToken] = useState("");
@@ -34,6 +36,16 @@ const HomeScreen = ({ navigation }) => {
   const [allLessons, setAllLessons] = useState([]);
   const [recomendedLessons, setRecomendedLessons] = useState([])
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getRecomendedLessons();
+    getAllLessons();
+    wait(2000).then(() => setRefreshing(false));
+    
+  }, []);
+
 
   useEffect(() => {
     retrieveUserData();
@@ -70,7 +82,7 @@ const HomeScreen = ({ navigation }) => {
         console.log(err)
       }
 
-    }, 500);
+    }, constants.timeOut);
     return () => clearTimeout(timing);
   }, []);
 
@@ -158,7 +170,15 @@ const HomeScreen = ({ navigation }) => {
         />
       </View>
 
-      <ScrollView style={{ marginHorizontal: 10 }}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        style={{ marginHorizontal: 10 }}
+      >
         {loading && <HomeCardSkelton />}
         {!loading &&
           <SwapCards navigation={navigation} title={"Students are viewing"} lessons={recomendedLessons} />

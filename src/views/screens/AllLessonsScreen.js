@@ -6,6 +6,8 @@ import {
   Text,
   Image,
   Dimensions,
+  RefreshControl,
+  ScrollView
 } from "react-native";
 import { FlatList, TouchableHighlight } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -20,33 +22,23 @@ const { width } = Dimensions.get("screen");
 const card = width;
 
 
-
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 
 const AllLessonsScreen = ({ navigation }) => {
 
-
+//
   const [allLessons, setAllLessons] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  // useEffect(() => {
-  //   getAllLessons();
-  // }, [])
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
-  // const getAllLessons = () => {
-  //   try {
-  //     axios.get(constants.backend_url + "/lesson/")
-  //       .then(res => {
-  //         setAllLessons(res.data)
-  //       })
-
-  //   } catch (err) {
-  //     console.log(err.response.data.msg)
-  //   }
-  // }
-
-
-  
 
   useEffect(() => {
     setLoading(true);
@@ -62,7 +54,7 @@ const AllLessonsScreen = ({ navigation }) => {
         console.log(err)
       }
 
-    }, 300);
+    }, constants.timeOut);
     return () => clearTimeout(timing);
   }, []);
 
@@ -74,6 +66,26 @@ const AllLessonsScreen = ({ navigation }) => {
       </View>
       {loading && <LessonCardSkelton />}
       {!loading &&
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
+        >
+          {
+            allLessons.map((item) => {
+              return (
+                <LessonCard lesson={item} navigation={navigation} key={item._id} />
+              )
+            })
+          }
+        </ScrollView>
+
+      }
+      {/* 
+      {!loading &&
         <FlatList
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 80 }}
@@ -83,9 +95,9 @@ const AllLessonsScreen = ({ navigation }) => {
             <LessonCard lesson={item} navigation={navigation} key={item._id} />
           )}
         />
-      }
+      } */}
 
-    
+
     </SafeAreaView>
   );
 };

@@ -7,8 +7,8 @@ import axios from "axios"
 import { AsyncStorage } from 'react-native';
 
 const Login = ({ navigation }) => {
-  const [email, setEmail] = useState("a@a.com");
-  const [password, setPassword] = useState("a@a.com");
+  const [email, setEmail] = useState("luca@a.com");
+  const [password, setPassword] = useState("luca@a.com");
   const [error, setError] = useState("");
 
 

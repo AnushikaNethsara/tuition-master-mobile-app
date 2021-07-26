@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, StyleSheet, View, Text, Image, Alert, Modal, Pressable, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, Image, Alert, Modal, Pressable, TouchableOpacity, Dimensions} from 'react-native';
 import { WebView } from 'react-native-webview';
 import { ScrollView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -9,6 +9,8 @@ import axios from "axios";
 import constants from "../../consts/constants";
 import { Rating } from "react-native-elements";
 import { AsyncStorage } from 'react-native';
+const { width } = Dimensions.get("screen");
+const card = width;
 
 
 const DetailsScreen = ({ navigation, route }) => {
@@ -21,12 +23,14 @@ const DetailsScreen = ({ navigation, route }) => {
   const [lessonStatus, setLessonStatus] = useState(false);
   const [userId, setUserId] = useState();
   const [token, setToken] = useState("");
-
+  const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     getRatings();
     getLessonStatus();
   }, [])
-
+  const closeModel = () => {
+    setModalVisible(false)
+  }
   const handleResponse = (data) => {
     if (data.title === "success") {
       setShowModel(false);
@@ -42,8 +46,6 @@ const DetailsScreen = ({ navigation, route }) => {
 
   const proceed = async () => {
     var studentId = await AsyncStorage.getItem('userId');
-    console.log("u: " + studentId)
-    console.log("u: " + lesson._id)
     await axios.post(
       constants.backend_url + "/purchase/addlesson-to-student-account",
       {
@@ -65,7 +67,8 @@ const DetailsScreen = ({ navigation, route }) => {
         ]
       );
     });
-    navigation.navigate("MyLessons");
+    setModalVisible(true)
+    //navigation.navigate("MyLessons");
   }
 
 
@@ -75,9 +78,9 @@ const DetailsScreen = ({ navigation, route }) => {
         .then(res => {
           var total = res.data.total;
           var count = res.data.count;
-          var actualRate = (total / count).toFixed(1);
           if (total != 0 && count != 0) {
-            setRate(actualRate);
+            var actualRate = (total / count);
+            setRate(parseFloat(actualRate.toFixed(1)));
             setAllCount(count);
           }
         })
@@ -124,16 +127,30 @@ const DetailsScreen = ({ navigation, route }) => {
         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Details</Text>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={{ height: 0 }}>
-          {/* <Image
-            style={{
-              width: "100%",
-              resizeMode: "contain",
-              top: -200,
+        {/* model success */}
+        <View style={style.centeredView}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
             }}
-            source={require("../../assets/logo5.png")}
-          /> */}
+          >
+            <View style={style.centeredView}>
+              <View style={style.modalView}>
+                <Text style={style.modalText}>Successfully Purchased</Text>
+                <Pressable
+                  style={[style.button, style.buttonClose]}
+                  onPress={() => setModalVisible(!modalVisible)}
+                >
+                  <Text style={style.textStyle}>OK</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
         </View>
+        {/* end model success */}
         <View
           style={{
             justifyContent: 'center',
@@ -294,7 +311,55 @@ const style = StyleSheet.create({
     color: "#000000",
     fontWeight: "bold",
     marginLeft: 0
+  },
+
+  //model
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: card / 1.3,
+    height: card / 2,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2191F3",
+    width: card / 3,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 25,
+    textAlign: "center",
+    fontSize:20
   }
+  
 });
 
 export default DetailsScreen;
